@@ -1,29 +1,26 @@
-# .
+# Movie Management App
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a movie management application built using Vue.js 3. The app includes features such as filtering movies, optimization, and function generations. The program is fully optimized for performance.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Filter**: Easily filter movies based on different criteria.
+- **Optimization**: The application is optimized for performance and scalability.
+- **Function Generations**: Dynamic generation of functions to handle various tasks.
 
-## Customize configuration
+## Installation
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+To run this program locally, follow these steps:
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+1. **Clone the repository**:
+   ```sh
+   git clone https://github.com/your-username/movie-management-app.git
+2. **Open the file**:
+   ```sh
+   cd movie-management-app
+3. **Install npm files**:
+    ```sh
+   npm install
+4. **Run the program**:
+    ```sh
+   npm run build
