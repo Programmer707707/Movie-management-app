@@ -1,5 +1,5 @@
 <template>
-  <div class="app font">
+  <div class="app">
     <div class="content">
       <AppInfo
         :allMoviesCount="movies.length"
@@ -15,10 +15,28 @@
       </div>
 
       <MovieList
+        v-if="movies.length"
         :movies="onFilterHandler(onSearchHandler(movies, term), filter)"
         @onToggle="onToggleHandler"
         @onDelete="onDeleteHandler"
       />
+
+      <div v-else-if="isLoading">
+        <Loader />
+      </div>
+
+      <Box v-else>
+        <p class="text-center fs-5">Movies are not availabe ❌</p>
+      </Box>
+
+      <Box class="d-flex justify-content-center">
+        <Pagination
+          :totalPage="totalPage"
+          :page="page"
+          @onChangePageHandler="changePageHandler"
+        />
+      </Box>
+
       <MovieAddForm @createMovie="createMovie" />
     </div>
   </div>
@@ -29,7 +47,12 @@ import AppFilter from "../app-filter/AppFilter.vue";
 import AppInfo from "../app-info/AppInfo.vue";
 import MovieAddForm from "../movie-add-form/MovieAddForm.vue";
 import MovieList from "../movie-list/MovieList.vue";
+import PrimaryButton from "../ui-components/PrimaryButton.vue";
 import SearchPanel from "../search-panel/SearchPanel.vue";
+import axios from "axios";
+import Loader from "../ui-components/Loader.vue";
+import Pagination from "../ui-components/Pagination.vue";
+
 export default {
   components: {
     AppInfo,
@@ -41,26 +64,24 @@ export default {
 
   data() {
     return {
-      movies: [
-        { name: "Omar", viewers: 811, like: false, favorite: false, id: 1 },
-        {
-          name: "Spiderman",
-          viewers: 411,
-          like: true,
-          favorite: false,
-          id: 2,
-        },
-        { name: "Batman", viewers: 311, like: false, favorite: false, id: 3 },
-        { name: "Joker", viewers: 211, like: false, favorite: false, id: 4 },
-      ],
+      movies: [],
       term: "",
       filter: "",
+      isLoading: false,
+      limit: 10,
+      page: 1,
+      totalPage: 0,
     };
   },
-
+  //Methods to use for general purpose
   methods: {
-    createMovie(item) {
-      this.movies.push(item);
+    //Synchronous function to add a new movie
+    async createMovie(item) {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        item
+      );
+      this.movies.push(response.data);
     },
     onToggleHandler({ id, prop }) {
       this.movies = this.movies.map((item) => {
@@ -70,7 +91,11 @@ export default {
         return item;
       });
     },
-    onDeleteHandler(id) {
+
+    async onDeleteHandler(id) {
+      const res = await axios.delete(
+        `https://jsonplaceholder.typicode.com/posts/${id}`
+      );
       this.movies = this.movies.filter((c) => c.id !== id);
     },
 
@@ -98,6 +123,54 @@ export default {
 
     updateFilterHandler(filter) {
       this.filter = filter;
+    },
+
+    //Fetched api using axios and used try,catch block
+    async fetchMovie() {
+      try {
+        this.isLoading = true;
+
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/posts?",
+          {
+            params: {
+              _limit: this.limit,
+              _page: this.page,
+            },
+          }
+        );
+        const newArr = response.data.map((item) => ({
+          id: item.id,
+          name: item.title,
+          like: false,
+          favorite: false,
+          viewers: item.id * 100 - 3,
+        }));
+        this.totalPage = Math.ceil(
+          response.headers["x-total-count"] / this.limit
+        );
+        this.movies = newArr;
+      } catch (error) {
+        alert(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    changePageHandler(page) {
+      this.page = page;
+      this.fetchMovie();
+    },
+  },
+
+  //Lifecycle methods
+  mounted() {
+    this.fetchMovie();
+  },
+
+  watch: {
+    page() {
+      this.fetchMovie();
     },
   },
 };

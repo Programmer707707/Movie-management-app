@@ -1,27 +1,29 @@
 <template>
-  <div class="movie-add-form">
+  <Box class="movie-add-form">
     <h3>Add new movie</h3>
     <form class="add-form d-flex" @submit.prevent>
-      <input
-        type="text"
-        class="form-control new-movie-label"
-        placeholder="What movie ?"
-        :value="name"
-        @input="name = $event.target.value"
-      />
-      <input
-        type="number"
-        class="form-control new-movie-label"
-        placeholder="Watched count?"
-        :value="viewers"
-        @input="viewers = $event.target.value"
+      <Input
+        class="new-movie-label"
+        placeholder="Which movie?"
+        v-model="name"
       />
 
-      <button class="btn btn-outline-success" type="submit" @click="addMovie()">
+      <Input
+        type="number"
+        class="new-movie-label"
+        placeholder="How many times watched?"
+        v-model="viewers"
+      />
+
+      <PrimaryButton
+        class="btn-outline-success"
+        type="submit"
+        @click="addMovie()"
+      >
         Add
-      </button>
+      </PrimaryButton>
     </form>
-  </div>
+  </Box>
 </template>
 
 <script>
@@ -34,18 +36,17 @@ export default {
   },
   methods: {
     addMovie() {
-      if (this.name || !this.viewers) return;
+      if (!this.name || !this.viewers) return;
       const newMovie = {
         name: this.name,
         viewers: this.viewers,
         favorite: false,
         like: false,
-        id: Date.now(),
       };
       this.$emit("createMovie", newMovie);
       //this.$emit( "funksiya nomi" , function argument)
       //Endi esa inputdagi valuelarni remove qilish uchun name va viewersni empty qilamiz
-      (this.name = ""), (this.value = "");
+      (this.name = ""), (this.viewers = "");
     },
   },
 };

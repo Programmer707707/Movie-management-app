@@ -1,8 +1,8 @@
 <template>
-  <div class="app-info">
-    <p class="fs-3 text-uppercase">All Movies: {{ allMoviesCount }}</p>
-    <p class="fs-4 text-uppercase">Watched movies: {{ favouriteCount }}</p>
-  </div>
+  <Box class="box">
+    <p class="fs-3 text">All Movies: {{ allMoviesCount }}</p>
+    <p class="fs-4 text">Favorite movies: {{ favouriteCount }}</p>
+  </Box>
 </template>
 
 <script>
@@ -21,10 +21,12 @@ export default {
 </script>
 
 <style scoped>
-.app-info {
-  padding: 1.5rem;
-  border-radius: 4px;
+.box {
+  /* From https://css.glass */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   background-color: #fcfaf5;
-  box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  border: 2px solid rgba(73, 73, 74, 0.3);
 }
 </style>
